@@ -60,7 +60,7 @@
 #
 # [*rake_exec*]
 #   Default: '/usr/bin/gitlab-rake'
-#   The gitlab-rake executable path. 
+#   The gitlab-rake executable path.
 #   You should not need to change this path.
 #
 # [*edition*]
@@ -247,6 +247,11 @@
 #   Default: false
 #   Replicate the registry Nginx config from the Gitlab Nginx config.
 #
+# [*roles*]
+#   Default: undef
+#   Array of roles when using a HA or Geo enabled GitLab configuration
+#   See: https://docs.gitlab.com/omnibus/roles/README.html for acceptable values
+#
 # [*secrets*]
 #   Default: undef
 #   Hash of values which will be placed into $secrets_file (by default /etc/gitlab/gitlab-secrets.json)
@@ -400,6 +405,7 @@ class gitlab (
   $registry_external_url = undef,
   $registry_nginx = undef,
   $registry_nginx_eq_nginx = false,
+  $roles = undef,
   $secrets = undef,
   $secrets_file = $::gitlab::params::secrets_file,
   $sentinel = undef,
@@ -471,6 +477,7 @@ class gitlab (
   if $registry_nginx { validate_hash($registry_nginx) }
   validate_bool($registry_nginx_eq_nginx)
   if $registry_external_url { validate_string($registry_external_url) }
+  if $roles { validate_array($roles) }
   if $secrets { validate_hash($secrets) }
   if $sentinel { validate_hash($sentinel) }
   if $shell { validate_hash($shell) }
@@ -496,7 +503,7 @@ class gitlab (
   contain gitlab::install
   contain gitlab::config
   contain gitlab::service
- 
+
   create_resources(gitlab::custom_hook, $custom_hooks)
   create_resources(gitlab::global_hook, $global_hooks)
 }
