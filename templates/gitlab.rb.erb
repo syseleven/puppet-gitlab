@@ -50,8 +50,8 @@ external_port '<%= @external_port %>'
 ##!   redis_sentinel_role redis_master_role redis_slave_role geo_primary_role geo_secondary_role
 ##! For more deatils on each role, see:
 ##! https://docs.gitlab.com/omnibus/roles/README.html#roles
-roles <%= @roles.keys.each do |k| decorate(@roles[k]) %>
-<%- end end -%>
+roles <%= @roles %>
+<%- end -%>
 <%- if @git_data_dir -%>
 ## For setting up different data storing directory
 ## see https://gitlab.com/gitlab-org/omnibus-gitlab/blob/629def0a7a26e7c2326566f0758d4a27857b52a3/README.md#storing-git-data-in-an-alternative-directory
