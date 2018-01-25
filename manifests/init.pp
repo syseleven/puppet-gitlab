@@ -405,7 +405,7 @@ class gitlab (
   $registry_external_url = undef,
   $registry_nginx = undef,
   $registry_nginx_eq_nginx = false,
-  $roles = undef,
+  $roles = [],
   $secrets = undef,
   $secrets_file = $::gitlab::params::secrets_file,
   $sentinel = undef,
