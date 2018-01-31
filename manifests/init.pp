@@ -496,9 +496,9 @@ class gitlab (
   validate_hash($custom_hooks)
   validate_hash($global_hooks)
 
-  class { '::gitlab::install': } ->
-  class { '::gitlab::config': } ~>
-  class { '::gitlab::service': }
+  class { '::gitlab::install': }
+  -> class { '::gitlab::config': }
+  ~> class { '::gitlab::service': }
 
   contain gitlab::install
   contain gitlab::config

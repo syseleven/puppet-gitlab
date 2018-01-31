@@ -16,7 +16,7 @@
 This Puppet module installs and manages [Gitlab](https://about.gitlab.com/).
 It makes use of the provided [Omnibus](https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md) packages and the [packagecloud package repositories](https://packages.gitlab.com/gitlab).
 
-[![Build Status](https://api.travis-ci.org/vshn/puppet-gitlab.svg?branch=master)](https://travis-ci.org/vshn/puppet-gitlab)
+[![Build Status](https://api.travis-ci.org/voxpupuli/puppet-gitlab.svg?branch=master)](https://travis-ci.org/voxpupuli/puppet-gitlab)
 [![vshn-gitlab](https://img.shields.io/puppetforge/v/vshn/gitlab.svg)](https://forge.puppetlabs.com/vshn/gitlab)
 
 ## Module Description
@@ -272,7 +272,7 @@ The Gitlab CI runner installation is at the moment only tested on Ubuntu 14.04.
 
 ## Development
 
-1. Fork it (https://github.com/vshn/puppet-gitlab/fork)
+1. Fork it (https://github.com/voxpupuli/puppet-gitlab/fork)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -283,4 +283,6 @@ Make sure your PR passes the Rspec tests.
 ## Contributors
 
 Have a look at [Github contributors](https://github.com/vshn/puppet-gitlab/graphs/contributors) to see a list of all the awesome contributors to this Puppet module. <3
+This module was created and maintained by [VSHN AG](https://vshn.ch/) until the end of 2017. It was then donated
+to Voxpupuli so that a broader community is able to maintain the module.
 
