@@ -75,6 +75,7 @@ class gitlab::config {
   $backup_cron_enable = $::gitlab::backup_cron_enable
   $backup_cron_minute = $::gitlab::backup_cron_minute
   $backup_cron_hour = $::gitlab::backup_cron_hour
+  $roles = $::gitlab::roles
   if empty($::gitlab::backup_cron_hour) {
     $backup_cron_skips = ''
   } else {
