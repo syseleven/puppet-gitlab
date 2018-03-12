@@ -29,6 +29,7 @@ class gitlab::config {
   $gitlab_pages = $::gitlab::gitlab_pages
   $gitlab_rails = $::gitlab::gitlab_rails
   $high_availability = $::gitlab::high_availability
+  $letsencrypt = $::gitlab::letsencrypt
   $logging = $::gitlab::logging
   $logrotate = $::gitlab::logrotate
   $manage_storage_directories = $::gitlab::manage_storage_directories
@@ -67,6 +68,7 @@ class gitlab::config {
   $sidekiq = $::gitlab::sidekiq
   $sidekiq_cluster = $::gitlab::sidekiq_cluster
   $skip_auto_migrations = $::gitlab::skip_auto_migrations
+  $store_git_keys_in_db = $::gitlab::store_git_keys_in_db
   $source_config_file = $::gitlab::source_config_file
   $unicorn = $::gitlab::unicorn
   $gitlab_workhorse = $::gitlab::gitlab_workhorse
@@ -76,11 +78,11 @@ class gitlab::config {
   $backup_cron_minute = $::gitlab::backup_cron_minute
   $backup_cron_hour = $::gitlab::backup_cron_hour
   $roles = $::gitlab::roles
-  if empty($::gitlab::backup_cron_hour) {
+  if empty($::gitlab::backup_cron_skips) {
     $backup_cron_skips = ''
   } else {
     $_backup_cron_skips = join($::gitlab::backup_cron_skips, ',')
-    $backup_cron_skips = "SKIP:${_backup_cron_skips}"
+    $backup_cron_skips = "SKIP=${_backup_cron_skips}"
   }
 
   # replicate $nginx to $mattermost_nginx if $mattermost_nginx_eq_nginx true
@@ -136,8 +138,10 @@ class gitlab::config {
 
   if $service_manage {
     # configure gitlab using the official tool
-    File[$config_file] {
-      notify => Exec['gitlab_reconfigure']
+    if $config_manage {
+      File[$config_file] {
+        notify => Exec['gitlab_reconfigure']
+      }
     }
     if ! empty($secrets) {
       File[$secrets_file] {
@@ -178,6 +182,32 @@ class gitlab::config {
       owner  => 'root',
       group  => 'root',
       mode   => '0644',
+    }
+  }
+
+  if $store_git_keys_in_db != undef {
+    $_store_git_keys_in_db = $store_git_keys_in_db ? {
+      true    => 'file',
+      default => 'absent',
+    }
+
+    $opt_gitlab_shell_dir = $store_git_keys_in_db ? {
+      true    => 'directory',
+      default => 'absent'
+    }
+
+    file {'/opt/gitlab-shell':
+      ensure => $opt_gitlab_shell_dir,
+      owner  => 'root',
+      group  => 'git',
+    }
+
+    file { '/opt/gitlab-shell/authorized_keys':
+      ensure => $_store_git_keys_in_db,
+      owner  => 'root',
+      group  => 'git',
+      mode   => '0650',
+      source => 'puppet:///modules/gitlab/gitlab_shell_authorized_keys',
     }
   }
 

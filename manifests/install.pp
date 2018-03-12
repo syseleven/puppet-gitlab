@@ -17,11 +17,10 @@ class gitlab::install {
       'debian': {
         include apt
         ensure_packages('apt-transport-https')
-        $_lower_os = downcase($::operatingsystem)
+
         apt::source { "gitlab_official_${edition}":
           comment  => 'Official repository for Gitlab',
-          location => "https://packages.gitlab.com/gitlab/gitlab-${edition}/${_lower_os}/",
-          release  => $::lsbdistcodename,
+          location => "https://packages.gitlab.com/gitlab/gitlab-${edition}/${::operatingsystem.downcase}/",
           repos    => 'main',
           key      => {
             id     => '1A4C919DB987D435939638B914219A96E15E78F4',
@@ -52,8 +51,8 @@ class gitlab::install {
       'redhat': {
 
         $gpgkey = $edition ? {
-            'ee'    => 'https://packages.gitlab.com/gitlab/gitlab-ee/gpgkey/gitlab-gitlab-ee-3D645A26AB9FBD22.pub.gpg',
-            default => 'https://packages.gitlab.com/gpg.key',
+            'ee'    => 'https://packages.gitlab.com/gitlab/gitlab-ce/gpgkey https://packages.gitlab.com/gitlab/gitlab-ee/gpgkey/gitlab-gitlab-ee-3D645A26AB9FBD22.pub.gpg',
+            'ce'    => 'https://packages.gitlab.com/gitlab/gitlab-ce/gpgkey https://packages.gitlab.com/gitlab/gitlab-ce/gpgkey/gitlab-gitlab-ce-3D645A26AB9FBD22.pub.gpg'
         }
 
         yumrepo { "gitlab_official_${edition}":

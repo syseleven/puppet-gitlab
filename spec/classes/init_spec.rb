@@ -48,11 +48,11 @@ describe 'gitlab', type: :class do
           }
         end
         describe 'external_port' do
-          let(:params) { { external_port: 987_654 } }
+          let(:params) { { external_port: 9654 } }
 
           it {
             is_expected.to contain_file('/etc/gitlab/gitlab.rb'). \
-              with_content(%r{^\s*external_port '987654'$})
+              with_content(%r{^\s*external_port '9654'$})
           }
         end
         describe 'nginx' do
@@ -67,6 +67,20 @@ describe 'gitlab', type: :class do
             is_expected.to contain_file('/etc/gitlab/gitlab.rb'). \
               with_content(%r{^\s*nginx\['enable'\] = true$}).
               with_content(%r{^\s*nginx\['listen_port'\] = ('|)80('|)$})
+          }
+        end
+        describe 'letsencrypt' do
+          let(:params) do
+            { letsencrypt: {
+              'enable' => true,
+              'contact_emails' => ['test@example.com']
+            } }
+          end
+
+          it {
+            is_expected.to contain_file('/etc/gitlab/gitlab.rb'). \
+              with_content(%r{^\s*letsencrypt\['enable'\] = true$}).
+              with_content(%r{^\s*letsencrypt\['contact_emails'\] = \["test@example.com"\]$})
           }
         end
         describe 'secrets' do
@@ -233,6 +247,13 @@ describe 'gitlab', type: :class do
               with_content(%r{"/var/opt/data"})
           end
         end
+        describe 'with store_git_keys_in_db' do
+          let(:params) { { store_git_keys_in_db: true } }
+
+          it do
+            is_expected.to contain_file('/opt/gitlab-shell/authorized_keys')
+          end
+        end
       end
     end
   end
@@ -240,7 +261,6 @@ describe 'gitlab', type: :class do
   context 'on usupported os' do
     let(:facts) do
       {
-        gitlab_systemd: false,
         osfamily: 'Solaris',
         operatingsystem: 'Nexenta'
       }

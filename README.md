@@ -17,7 +17,10 @@ This Puppet module installs and manages [Gitlab](https://about.gitlab.com/).
 It makes use of the provided [Omnibus](https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md) packages and the [packagecloud package repositories](https://packages.gitlab.com/gitlab).
 
 [![Build Status](https://api.travis-ci.org/voxpupuli/puppet-gitlab.svg?branch=master)](https://travis-ci.org/voxpupuli/puppet-gitlab)
-[![vshn-gitlab](https://img.shields.io/puppetforge/v/vshn/gitlab.svg)](https://forge.puppetlabs.com/vshn/gitlab)
+[![puppet-gitlab](https://img.shields.io/puppetforge/v/puppet/gitlab.svg)](https://forge.puppetlabs.com/puppet/gitlab)
+
+Please note: The module [vshn/gitlab](https://forge.puppet.com/vshn/gitlab) has been deprecated
+and is now available under Vox Pupuli [puppet/gitlab](https://forge.puppet.com/puppet/gitlab).
 
 ## Module Description
 
@@ -58,7 +61,7 @@ the `$::os` fact used in `install.pp` doesn't work as expected.
 
 ### Beginning with Gitlab
 
-Just include the class and specify at least `external_url`. If `external_url` is not specified it will default to the FQDN fact of the system. 
+Just include the class and specify at least `external_url`. If `external_url` is not specified it will default to the FQDN fact of the system.
 
 ```puppet
 class { 'gitlab':
@@ -170,7 +173,7 @@ Here is an example how to configure Gitlab CI runners using Hiera:
 
 To use the Gitlab CI runners it is required to have the [garethr/docker](https://forge.puppetlabs.com/garethr/docker) module.
 
-`$manage_docker` can be set to false if docker is managed externaly.
+`$manage_docker` can be set to false if docker is managed externally.
 
 ```yaml
 classes:
@@ -248,7 +251,7 @@ gitlab::custom_hooks:
 
 Since GitLab Shell 4.1.0 and GitLab 8.15 Chained hooks are supported. You can
 create global hooks which will run for each repository on your server. Global
-hooks can be created as a pre-receive, post-receive, or update hook. 
+hooks can be created as a pre-receive, post-receive, or update hook.
 
 ```puppet
 gitlab::global_hook { 'my_custom_hook':
@@ -266,6 +269,19 @@ gitlab::global_hooks:
     source: 'puppet:///modules/my_module/post-receive'
 ```
 
+### Fast Lookup of SSH keys
+
+GitLab instances with a large number of users may notice slowdowns when making initial connections for ssh operations.
+GitLab has created a feature that allows authorized ssh keys to be stored in the db (instead of the `authorized_keys`
+file for the `git` user)
+
+You can enable this feature in GitLab using the `store_git_keys_in_db` parameter.
+
+Please note, managing the sshd service and openssh is outside the scope of this module.
+You will need to configure the AuthorizedKeysCommand for the `git` user in sshd.server yourself.
+Instructions for this are provided by GitLab at
+[Fast lookup of authorized SSH keys in the databasse](https://docs.gitlab.com/ee/administration/operations/fast_ssh_key_lookup.html)
+
 ### Gitlab CI Runner Limitations
 
 The Gitlab CI runner installation is at the moment only tested on Ubuntu 14.04.
@@ -282,7 +298,6 @@ Make sure your PR passes the Rspec tests.
 
 ## Contributors
 
-Have a look at [Github contributors](https://github.com/vshn/puppet-gitlab/graphs/contributors) to see a list of all the awesome contributors to this Puppet module. <3
+Have a look at [Github contributors](https://github.com/voxpupuli/puppet-gitlab/graphs/contributors) to see a list of all the awesome contributors to this Puppet module. <3
 This module was created and maintained by [VSHN AG](https://vshn.ch/) until the end of 2017. It was then donated
 to Voxpupuli so that a broader community is able to maintain the module.
-
