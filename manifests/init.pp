@@ -416,7 +416,7 @@ class gitlab (
   Optional[String]               $registry_external_url         = undef,
   Optional[Hash]                 $registry_nginx                = undef,
   Boolean                        $registry_nginx_eq_nginx       = false,
-  Optional[Hash]                 $roles                         = undef,
+  Optional[Array]                $roles                         = undef,
   Optional[Hash]                 $secrets                       = undef,
   Stdlib::Absolutepath           $secrets_file                  = $::gitlab::params::secrets_file,
   Optional[Hash]                 $sentinel                      = undef,
